@@ -3,6 +3,7 @@ import 'package:app/screens/tournament_screen.dart';
 import 'package:app/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TournamentsScreen extends StatefulWidget {
@@ -207,6 +208,67 @@ class MatchCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  match["room_id"] != ""
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Room Id: ${match["room_id"]}",
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black54),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Clipboard.setData(ClipboardData(
+                                          text: match["room_id"]));
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content:
+                                            Text("Room Id copied successfully"),
+                                        backgroundColor: Colors.green,
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                    },
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      size: 15,
+                                    )),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Room Password: ${match["room_pass"]} ",
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black54),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Clipboard.setData(ClipboardData(
+                                          text: match["room_pass"]));
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            "Room Password copied successfully"),
+                                        backgroundColor: Colors.green,
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                    },
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      size: 15,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox(),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

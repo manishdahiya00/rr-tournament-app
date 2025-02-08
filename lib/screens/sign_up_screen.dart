@@ -62,6 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     try {
+      setState(() => _isSubmitting = true);
       final dio = Dio();
       final response = await dio.post(
         "${Utils.baseUrl}/userSignup",
@@ -82,7 +83,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await prefs.setString(
             "securityToken", response.data["securityToken"].toString());
         _showSnackbar(response.data["message"]);
-        _navigateToHomeScreen();
+        String userId = prefs.getString("userId") ?? "";
+        String securityToken = prefs.getString("securityToken") ?? "";
+
+        if (userId.isEmpty || securityToken.isEmpty) {
+          _navigateToLoginScreen();
+          return;
+        }
+        try {
+          final dio = Dio();
+          final response = await dio.post(
+            "${Utils.baseUrl}/appOpen",
+            data: {"userId": userId, "securityToken": securityToken},
+          );
+          if (response.statusCode == 201 && response.data["status"] == 200) {
+            await prefs.setString("name", response.data["name"].toString());
+            await prefs.setString("email", response.data["email"].toString());
+            await prefs.setString("phn1", response.data["phn1"].toString());
+            await prefs.setString("phn2", response.data["phn2"].toString());
+            await prefs.setString("tel1", response.data["tel1"].toString());
+            await prefs.setString("tel2", response.data["tel2"].toString());
+            await prefs.setString(
+                "walletBalance", response.data["walletBalance"].toString());
+            await prefs.setString(
+                "bannerImage", response.data["bannerImage"].toString());
+            _navigateToHomeScreen();
+          } else {
+            _navigateToLoginScreen();
+          }
+        } catch (e) {
+          _navigateToLoginScreen();
+        }
       } else {
         _showSnackbar(response.data["message"]);
         _navigateToLoginScreen();

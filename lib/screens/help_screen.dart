@@ -21,6 +21,7 @@ class _HelpScreenState extends State<HelpScreen> {
       tel1 = prefs.getString("tel1") ?? "";
       tel2 = prefs.getString("tel2") ?? "";
     });
+    print(phn1);
   }
 
   @override

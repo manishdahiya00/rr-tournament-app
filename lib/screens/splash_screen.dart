@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
             "walletBalance", response.data["walletBalance"].toString());
         await prefs.setString(
             "bannerImage", response.data["bannerImage"].toString());
-
+        print(prefs.getString("phn1"));
         _navigateToHomeScreen();
       } else {
         _navigateToLoginScreen();
