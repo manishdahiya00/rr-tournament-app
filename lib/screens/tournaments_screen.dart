@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app/screens/sign_in_screen.dart';
 import 'package:app/screens/tournament_screen.dart';
 import 'package:app/utils.dart';
@@ -33,6 +35,7 @@ class _TournamentsScreenState extends State<TournamentsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -43,8 +46,9 @@ class _TournamentsScreenState extends State<TournamentsScreen>
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Utils.darkBg,
         bottom: TabBar(
+          dividerHeight: 0,
           controller: _tabController,
           labelColor: Colors.white,
           indicatorColor: Colors.white,
@@ -125,7 +129,7 @@ class _MatchesTabState extends State<MatchesTab> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
-            child: CircularProgressIndicator(color: Colors.red),
+            child: CircularProgressIndicator(color: Colors.cyan),
           );
         }
 
@@ -141,7 +145,11 @@ class _MatchesTabState extends State<MatchesTab> {
         final matches = data["matches"] ?? [];
 
         if (matches.isEmpty) {
-          return const Center(child: Text("No Matches found"));
+          return const Center(
+              child: Text(
+            "No Matches found",
+            style: TextStyle(color: Colors.white),
+          ));
         }
 
         return ListView.builder(
@@ -165,145 +173,161 @@ class MatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset("assets/images/logo.png",
-                      height: 50, width: 50)),
-              title: Text(match["title"] ?? "Unknown Match"),
-              subtitle: Text(match["timing"] ?? "No timing info"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TournamentScreen(match: match),
-                  ),
-                );
-              },
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
+      child: InkWell(
+        splashColor: Utils.secondaryColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(10),
+        highlightColor: Utils.secondaryColor.withOpacity(0.5),
+        focusColor: Utils.secondaryColor.withOpacity(0.5),
+        hoverColor: Utils.secondaryColor.withOpacity(0.5),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TournamentScreen(match: match),
+            ),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Card(
+              color: Utils.secondaryColor.withOpacity(0.3),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              elevation: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.monetization_on,
-                      color: Colors.black, size: 16),
-                  const SizedBox(width: 10),
-                  Text(
-                    "${match["entry_fee"]?.toString() ?? 0} PP",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                  ListTile(
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset("assets/images/logo.png",
+                            height: 50, width: 50)),
+                    title: Text(
+                      match["title"] ?? "Unknown Match",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      match["timing"] ?? "No timing info",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.monetization_on,
+                            color: Utils.primaryColor, size: 16),
+                        const SizedBox(width: 10),
+                        Text(
+                          "${match["entry_fee"]?.toString() ?? 0} PP",
+                          style: const TextStyle(
+                            color: Utils.primaryColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        match["room_id"] != ""
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "Room Id: ${match["room_id"]}",
+                                        style: const TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text: match["room_id"]));
+
+                                            Utils.showSnackbar(context,
+                                                message:
+                                                    "Room Id Copied Successfully");
+                                          },
+                                          icon: const Icon(
+                                            Icons.copy,
+                                            size: 15,
+                                            color: Utils.primaryColor,
+                                          )),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Room Password: ${match["room_pass"]}",
+                                        style: const TextStyle(
+                                            fontSize: 14, color: Colors.white),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text: match["room_pass"]));
+
+                                            Utils.showSnackbar(context,
+                                                message:
+                                                    "Room Pass Copied Successfully");
+                                          },
+                                          icon: const Icon(
+                                            Icons.copy,
+                                            size: 15,
+                                            color: Utils.primaryColor,
+                                          )),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${match["total_slots"]} Slots",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                            Text(
+                              "${match["slots_left"]} Remaining Slots",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        LinearProgressIndicator(
+                          value: ((match["total_slots"] - match["slots_left"]) /
+                              (match["total_slots"])),
+                          color: Utils.primaryColor,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          match["subtitle"] ?? "No additional info",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.white),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  match["room_id"] != ""
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Room Id: ${match["room_id"]}",
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black54),
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Clipboard.setData(ClipboardData(
-                                          text: match["room_id"]));
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content:
-                                            Text("Room Id copied successfully"),
-                                        backgroundColor: Colors.green,
-                                        behavior: SnackBarBehavior.floating,
-                                      ));
-                                    },
-                                    icon: const Icon(
-                                      Icons.copy,
-                                      size: 15,
-                                    )),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Room Password: ${match["room_pass"]} ",
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black54),
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Clipboard.setData(ClipboardData(
-                                          text: match["room_pass"]));
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            "Room Password copied successfully"),
-                                        backgroundColor: Colors.green,
-                                        behavior: SnackBarBehavior.floating,
-                                      ));
-                                    },
-                                    icon: const Icon(
-                                      Icons.copy,
-                                      size: 15,
-                                    )),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox(),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${match["total_slots"]} Slots",
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.black54),
-                      ),
-                      Text(
-                        "${match["slots_left"]} Remaining Slots",
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  LinearProgressIndicator(
-                    value: ((match["total_slots"] - match["slots_left"]) /
-                        (match["total_slots"])),
-                    color: Colors.red,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    match["subtitle"] ?? "No additional info",
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

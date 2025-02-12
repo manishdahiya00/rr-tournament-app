@@ -14,23 +14,20 @@ class TournamentScreen extends StatefulWidget {
 class _TournamentScreenState extends State<TournamentScreen> {
   final TextStyle _headingStyle = const TextStyle(
     fontSize: 20,
+    color: Colors.white,
     fontWeight: FontWeight.w500,
   );
 
   final TextStyle _subTextStyle = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: Colors.grey,
-  );
-
-  final TextStyle _boldTextStyle = const TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.bold,
+    color: Colors.white,
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -39,8 +36,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
         title: Text(widget.match["title"] ?? "Tournament",
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w500)),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
@@ -82,7 +78,7 @@ class _TournamentScreenState extends State<TournamentScreen> {
                     widget.match["winning_prize"]?.toString() ?? "0",
                     Colors.orange),
                 _buildMatchInfo(Icons.local_fire_department, "Per Kill",
-                    widget.match["per_kill"]?.toString() ?? "0", Colors.red),
+                    widget.match["per_kill"]?.toString() ?? "0", Colors.cyan),
               ],
             ),
             const SizedBox(height: 16),
@@ -131,7 +127,9 @@ class _TournamentScreenState extends State<TournamentScreen> {
             const SizedBox(height: 8),
             Text(
               widget.match["rules"] ?? "No rules provided.",
-              style: _subTextStyle,
+              style: const TextStyle(
+                color: Colors.white70,
+              ),
             ),
           ],
         ),
@@ -146,9 +144,19 @@ class _TournamentScreenState extends State<TournamentScreen> {
       children: [
         Icon(icon, color: iconColor, size: 24),
         const SizedBox(height: 4),
-        Text(title,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
-        Text(value, style: _boldTextStyle),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+        Text(value,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w400)),
       ],
     );
   }
@@ -161,11 +169,17 @@ class _TournamentScreenState extends State<TournamentScreen> {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
-          backgroundColor: Colors.red,
+          backgroundColor: Utils.primaryColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        child: Text(label, style: const TextStyle(color: Colors.white)),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+          ),
+        ),
       ),
     );
   }

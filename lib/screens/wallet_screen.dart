@@ -17,6 +17,10 @@ class _WalletScreenState extends State<WalletScreen> {
   String walletBalance = "0";
   String userId = "0";
   String securityToken = "0";
+  String phn1 = "0";
+  String phn2 = "0";
+  String tel1 = "0";
+  String tel2 = "0";
 
   @override
   void initState() {
@@ -31,6 +35,10 @@ class _WalletScreenState extends State<WalletScreen> {
       walletBalance = prefs.getString('walletBalance') ?? "0";
       userId = prefs.getString('userId') ?? "0";
       securityToken = prefs.getString('securityToken') ?? "0";
+      phn1 = prefs.getString('phn1') ?? "0";
+      phn2 = prefs.getString('phn2') ?? "0";
+      tel1 = prefs.getString('tel1') ?? "0";
+      tel2 = prefs.getString('tel2') ?? "0";
     });
   }
 
@@ -44,13 +52,12 @@ class _WalletScreenState extends State<WalletScreen> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor:
-              Colors.transparent, // Transparent background for dialog
+          backgroundColor: Utils.darkBg, // Transparent background for dialog
           child: Container(
             width: MediaQuery.of(context).size.width, // Full width
             padding: const EdgeInsets.all(20), // Add some padding if necessary
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Utils.darkBg,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -59,16 +66,21 @@ class _WalletScreenState extends State<WalletScreen> {
               children: [
                 const Text(
                   "Withdraw Funds",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: upiController,
-                  cursorColor: Colors.red,
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Enter UPI Id",
+                    hintStyle: const TextStyle(color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
+                    fillColor: Utils.secondaryColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -78,11 +90,13 @@ class _WalletScreenState extends State<WalletScreen> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: mobileController,
-                  cursorColor: Colors.red,
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Enter mobile number",
+                    hintStyle: const TextStyle(color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
+                    fillColor: Utils.secondaryColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -92,11 +106,13 @@ class _WalletScreenState extends State<WalletScreen> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: amountController,
-                  cursorColor: Colors.red,
+                  cursorColor: Colors.white,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Enter amount",
+                    hintStyle: const TextStyle(color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
+                    fillColor: Utils.secondaryColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -111,7 +127,10 @@ class _WalletScreenState extends State<WalletScreen> {
                       onPressed: () {
                         Navigator.of(context).pop(); // Close the popup
                       },
-                      child: const Text("Cancel"),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
@@ -124,14 +143,18 @@ class _WalletScreenState extends State<WalletScreen> {
                             mobileNumber.isEmpty ||
                             amount == null ||
                             amount <= 0) {
-                          _showSnackbar("Please fill all fields correctly.");
+                          Utils.showSnackbar(context,
+                              message: "Please fill all fields correctly.");
                         } else {
                           _submitWithdrawal(upiId, mobileNumber, amount, userId,
                               securityToken);
                           Navigator.of(context).pop(); // Close the popup
                         }
                       },
-                      child: const Text("Submit"),
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(color: Utils.primaryColor),
+                      ),
                     ),
                   ],
                 ),
@@ -149,14 +172,13 @@ class _WalletScreenState extends State<WalletScreen> {
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: Dialog(
-            backgroundColor:
-                Colors.transparent, // Transparent background for dialog
+            backgroundColor: Utils.darkBg, // Transparent background for dialog
             child: Container(
               width: MediaQuery.of(context).size.width, // Full width
               padding:
                   const EdgeInsets.all(20), // Add some padding if necessary
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Utils.darkBg,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -165,7 +187,10 @@ class _WalletScreenState extends State<WalletScreen> {
                 children: [
                   const Text(
                     "Deposit Funds",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -183,7 +208,10 @@ class _WalletScreenState extends State<WalletScreen> {
           Thank you for your cooperation and understanding in maintaining the security and integrity of our platform.
 
           ''',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -192,7 +220,10 @@ class _WalletScreenState extends State<WalletScreen> {
                         onPressed: () {
                           Navigator.of(context).pop(); // Close the popup
                         },
-                        child: const Text("Cancel"),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -202,7 +233,12 @@ class _WalletScreenState extends State<WalletScreen> {
                                   builder: (context) =>
                                       const QrCodesScreen())); // Close the popup
                         },
-                        child: const Text("Continue"),
+                        child: const Text(
+                          "Continue",
+                          style: TextStyle(
+                            color: Utils.primaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -239,31 +275,21 @@ class _WalletScreenState extends State<WalletScreen> {
       );
 
       if (response.statusCode == 201 && response.data["status"] == 200) {
-        _showSnackbar(response.data["message"], color: Colors.green);
+        Utils.showSnackbar(context, message: response.data["message"]);
       } else {
-        _showSnackbar(response.data["message"]);
+        Utils.showSnackbar(context, message: response.data["message"]);
       }
     } catch (e) {
-      _showSnackbar("Something went wrong. Try again.");
+      Utils.showSnackbar(context, message: "Something went wrong. Try again.");
       _navigateToLoginScreen();
     }
-  }
-
-  // Show Snackbar messages
-  void _showSnackbar(String message, {Color color = Colors.red}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: color,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Utils.darkBg,
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -280,8 +306,7 @@ class _WalletScreenState extends State<WalletScreen> {
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w500),
           ),
-          backgroundColor: Colors.red,
-          elevation: 1,
+          backgroundColor: Utils.darkBg,
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -290,7 +315,7 @@ class _WalletScreenState extends State<WalletScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Material(
-                  color: Colors.white,
+                  color: Utils.secondaryColor,
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -304,6 +329,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -312,7 +338,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green,
+                            color: Utils.primaryColor,
                           ),
                         ),
                       ],
@@ -333,12 +359,12 @@ class _WalletScreenState extends State<WalletScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: Colors.red,
+                          backgroundColor: Utils.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
                         child: const Text("Deposit",
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(color: Colors.black)),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -348,12 +374,12 @@ class _WalletScreenState extends State<WalletScreen> {
                         onPressed: _showWithdrawPopup, // Show withdrawal popup
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: Colors.red,
+                          backgroundColor: Utils.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
                         child: const Text("Withdraw",
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(color: Colors.black)),
                       ),
                     ),
                     const SizedBox(
@@ -382,7 +408,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        color: Colors.green,
                       ),
                     ),
                     const SizedBox(
@@ -395,20 +421,6 @@ class _WalletScreenState extends State<WalletScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        '@RROWNER01',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
                       ),
@@ -416,14 +428,28 @@ class _WalletScreenState extends State<WalletScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '@RROWNER02',
-                        style: TextStyle(
+                        tel1,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: Utils.primaryColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        tel2,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Utils.primaryColor,
                         ),
                       ),
                     ),
@@ -437,20 +463,6 @@ class _WalletScreenState extends State<WalletScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        '+91 9817850944',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
                       ),
@@ -458,14 +470,28 @@ class _WalletScreenState extends State<WalletScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '+91 8685815676',
-                        style: TextStyle(
+                        phn1,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: Utils.primaryColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        phn2,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Utils.primaryColor,
                         ),
                       ),
                     ),

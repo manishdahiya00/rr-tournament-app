@@ -1,4 +1,5 @@
 import 'package:app/screens/profile_screen.dart';
+import 'package:app/screens/refer_screen.dart';
 import 'package:app/screens/sign_in_screen.dart';
 import 'package:app/screens/tournaments_screen.dart';
 import 'package:app/screens/wallet_screen.dart';
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     const HomeContent(),
+    const ReferScreen(),
     const ProfileScreen(),
   ];
 
@@ -28,12 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: _pages[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.red,
-          unselectedItemColor: Colors.black.withOpacity(0.7),
+          backgroundColor: Utils.darkBg,
+          selectedItemColor: Utils.primaryColor,
+          unselectedItemColor: Colors.white,
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.share), label: 'Refer'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
         ),
@@ -59,8 +63,8 @@ class _HomeContentState extends State<HomeContent> {
   @override
   void initState() {
     super.initState();
-    _categoriesFuture = _fetchCategories();
     _loadUserData();
+    _categoriesFuture = _fetchCategories();
   }
 
   Future<void> _loadUserData() async {
@@ -104,6 +108,11 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -113,8 +122,7 @@ class _HomeContentState extends State<HomeContent> {
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
         actions: [
           InkWell(
             onTap: () {
@@ -127,7 +135,7 @@ class _HomeContentState extends State<HomeContent> {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Utils.primaryColor,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
@@ -147,13 +155,13 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Utils.darkBg,
       body: FutureBuilder<List<dynamic>>(
         future: _categoriesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(color: Colors.red),
+              child: CircularProgressIndicator(color: Utils.primaryColor),
             );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -173,14 +181,19 @@ class _HomeContentState extends State<HomeContent> {
                     width: Utils.screenWidth(context),
                     height: Utils.screenHeight(context) * 0.20,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.error, size: 100, color: Colors.red),
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.error,
+                        size: 100,
+                        color: Utils.primaryColor),
                   ),
                 ),
                 const SizedBox(height: 16),
                 const Text(
                   "Tournaments",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
                 ),
                 const SizedBox(height: 16),
                 GridView.builder(
@@ -208,16 +221,8 @@ class _HomeContentState extends State<HomeContent> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Utils.secondaryColor.withAlpha(100),
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +237,7 @@ class _HomeContentState extends State<HomeContent> {
                                 height: 150,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const Icon(Icons.error,
-                                        size: 50, color: Colors.red),
+                                        size: 50, color: Utils.primaryColor),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -244,6 +249,7 @@ class _HomeContentState extends State<HomeContent> {
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   fontSize: 16,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),

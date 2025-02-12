@@ -21,18 +21,6 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
 
   bool _isSubmitting = false;
 
-  void _showSnackbar(String message, {Color color = Colors.red}) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: color,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
-  }
-
   Future<void> _submitJoinTeam() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId") ?? "0";
@@ -42,16 +30,16 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
     final userName = _userNameController.text.trim();
 
     if (name.isEmpty || name.length < 3) {
-      _showSnackbar("Name must be at least 3 characters.");
+      Utils.showSnackbar("Name must be at least 3 characters.");
       return;
     }
 
     if (uid.isEmpty || uid.length < 3) {
-      _showSnackbar("UID must be at least 3 characters.");
+      Utils.showSnackbar("UID must be at least 3 characters.");
       return;
     }
     if (userName.isEmpty) {
-      _showSnackbar("Username is required.");
+      Utils.showSnackbar("Username is required.");
       return;
     }
     setState(() => _isSubmitting = true);
@@ -73,9 +61,9 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
         await prefs.setString(
             "walletBalance", response.data["walletBalance"].toString());
 
-        _showSnackbar(response.data["message"], color: Colors.green);
+        Utils.showSnackbar(response.data["message"]);
       } else {
-        _showSnackbar(response.data["message"]);
+        Utils.showSnackbar(response.data["message"]);
       }
     } catch (e) {
       _navigateToLoginScreen();
@@ -95,20 +83,27 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
       {required TextEditingController controller,
       required String hintText,
       required IconData icon,
-      bool obscureText = false}) {
+      bool obscureText = false,
+      TextInputType type = TextInputType.name}) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      cursorColor: Colors.red,
+      keyboardType: type,
+      style: const TextStyle(color: Colors.white),
+      cursorColor: Colors.white,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.grey),
         filled: true,
-        fillColor: Colors.grey.shade100,
+        fillColor: Utils.secondaryColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(
+          icon,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -123,10 +118,9 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
         ),
         title: const Text("Join Team",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Utils.darkBg,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(15),
@@ -136,33 +130,38 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
               children: [
                 const Text(
                   "Join a Team",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Utils.darkBg,
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Utils.secondaryColor,
                         blurRadius: 10,
                         spreadRadius: 2,
-                        offset: const Offset(0, 5),
+                        offset: Offset(0, 5),
                       ),
                     ],
                   ),
                   child: Column(
                     children: [
                       _buildTextField(
-                          controller: _nameController,
-                          hintText: "Enter your name ",
-                          icon: Icons.group),
+                        controller: _nameController,
+                        hintText: "Enter your name ",
+                        icon: Icons.group,
+                      ),
                       const SizedBox(height: 15),
                       _buildTextField(
                           controller: _uidController,
                           hintText: "Enter UID ",
+                          type: TextInputType.number,
                           icon: Icons.group),
                       const SizedBox(height: 15),
                       _buildTextField(
@@ -176,7 +175,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                           onPressed: _isSubmitting ? null : _submitJoinTeam,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 15),
-                            backgroundColor: Colors.red,
+                            backgroundColor: Utils.primaryColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -185,7 +184,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                               ? const CircularProgressIndicator(
                                   color: Colors.white)
                               : const Text("Join Team",
-                                  style: TextStyle(color: Colors.white)),
+                                  style: TextStyle(color: Colors.black)),
                         ),
                       ),
                     ],

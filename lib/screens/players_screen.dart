@@ -60,6 +60,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -67,8 +68,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
         ),
         title: const Text("Players",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -78,9 +78,17 @@ class _PlayersScreenState extends State<PlayersScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError || snapshot.data == null) {
-              return const Center(child: Text("Failed to load players."));
+              return const Center(
+                  child: Text(
+                "Failed to load players.",
+                style: TextStyle(color: Colors.white),
+              ));
             } else if (snapshot.data!.isEmpty) {
-              return const Center(child: Text("No players found."));
+              return const Center(
+                  child: Text(
+                "No players found.",
+                style: TextStyle(color: Colors.white),
+              ));
             }
 
             final playerList = snapshot.data!;
@@ -95,20 +103,20 @@ class _PlayersScreenState extends State<PlayersScreen> {
                   dataRowMinHeight: 56,
                   dataRowMaxHeight: 70,
                   headingRowColor: WidgetStateColor.resolveWith(
-                      (states) => Colors.red.shade100),
-                  border: TableBorder.all(color: Colors.black12),
+                      (states) => Utils.primaryColor),
+                  border: TableBorder.all(color: Utils.secondaryColor),
                   columns: const [
-                    DataColumn(
-                      label: Center(
-                        child: Text(
-                          "ID",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // DataColumn(
+                    //   label: Center(
+                    //     child: Text(
+                    //       "ID",
+                    //       style: TextStyle(
+                    //         fontWeight: FontWeight.bold,
+                    //         fontSize: 16,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     DataColumn(
                       label: Center(
                         child: Text(
@@ -120,14 +128,40 @@ class _PlayersScreenState extends State<PlayersScreen> {
                         ),
                       ),
                     ),
+                    DataColumn(
+                      label: Center(
+                        child: Text(
+                          "Slot No.",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                   rows: playerList.map((player) {
                     return DataRow(
                       cells: [
-                        DataCell(Center(
+                        // DataCell(Center(
+                        //     child: Text(
+                        //         (playerList.indexOf(player) + 1).toString()))),
+                        DataCell(
+                          Center(
                             child: Text(
-                                (playerList.indexOf(player) + 1).toString()))),
-                        DataCell(Center(child: Text(player["name"]))),
+                              player["name"],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Center(
+                            child: Text(
+                              player["slot_no"],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   }).toList(),

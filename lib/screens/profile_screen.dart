@@ -15,8 +15,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String name = "";
-  String email = "";
+  String phone = "";
   String walletBalance = "";
 
   @override
@@ -36,8 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = prefs.getString("name") ?? "0";
-      email = prefs.getString("email") ?? "0";
+      phone = prefs.getString("phone") ?? "-";
       walletBalance = prefs.getString("walletBalance") ?? "0";
     });
   }
@@ -45,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -52,8 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
         actions: [
           InkWell(
             onTap: () {
@@ -66,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Utils.primaryColor,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
@@ -104,19 +102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      phone,
                       style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      email,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -125,12 +115,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 30),
             const Text(
               'Account Settings',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(Icons.lock, color: Colors.black),
-              title: const Text('Privacy Policy'),
+              leading: const Icon(Icons.lock, color: Colors.white),
+              title: const Text(
+                'Privacy Policy',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -139,8 +135,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.gavel, color: Colors.black),
-              title: const Text('Terms and Conditions'),
+              leading: const Icon(Icons.gavel, color: Colors.white),
+              title: const Text(
+                'Terms and Conditions',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -149,8 +148,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.help, color: Colors.black),
-              title: const Text('Help'),
+              leading: const Icon(Icons.help, color: Colors.white),
+              title: const Text(
+                'Help and Support',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -166,12 +168,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   logout();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Utils.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
                 child: const Text(
                   'Logout',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
             ),

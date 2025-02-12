@@ -8,6 +8,7 @@ class QrCodesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -24,8 +25,7 @@ class QrCodesScreen extends StatelessWidget {
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
       ),
       body: SingleChildScrollView(
           child: SizedBox(

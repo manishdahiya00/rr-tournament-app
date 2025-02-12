@@ -1,3 +1,4 @@
+import 'package:app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +22,6 @@ class _HelpScreenState extends State<HelpScreen> {
       tel1 = prefs.getString("tel1") ?? "";
       tel2 = prefs.getString("tel2") ?? "";
     });
-    print(phn1);
   }
 
   @override
@@ -33,6 +33,7 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Utils.darkBg,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -40,8 +41,7 @@ class _HelpScreenState extends State<HelpScreen> {
         ),
         title: const Text("Help and Support",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-        backgroundColor: Colors.red,
-        elevation: 1,
+        backgroundColor: Utils.darkBg,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,15 +52,20 @@ class _HelpScreenState extends State<HelpScreen> {
               const SizedBox(height: 16),
               const Text(
                 "Contact Information",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
                 "Phone: $phn1\nAlternative Phone: +91 $phn2",
+                style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
                 "Telegram: @$tel1\nAlternative Telegram: @$tel2",
+                style: const TextStyle(color: Colors.white),
               ),
             ],
           ),
